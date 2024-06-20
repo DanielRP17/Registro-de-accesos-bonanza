@@ -10,7 +10,7 @@
   <script type="text/javascript">
     let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
     scanner.addListener('scan', function (content) {
-      fetch('https://script.google.com/u/0/home/projects/1JEBJUl60Bi-TwJBFwGQ73yGQM0jAicCKWU4L61FFGDMR2CPbnvuLv50D/projecthistory' + encodeURIComponent(content))
+      fetch('https://script.google.com/macros/s/1JEBJUl60Bi-TwJBFwGQ73yGQM0jAicCKWU4L61FFGDMR2CPbnvuLv50D/exec?data=' + encodeURIComponent(content))
         .then(response => response.text())
         .then(data => alert(data));
     });
