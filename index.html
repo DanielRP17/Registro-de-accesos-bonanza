@@ -1,30 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Escáner de QR</title>
-  <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acceso al Fraccionamiento</title>
 </head>
 <body>
-  <h1>Escanear QR</h1>
-  <video id="preview" width="300" height="300"></video>
-  <script type="text/javascript">
-    let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-    scanner.addListener('scan', function (content) {
-      let data = JSON.parse(content);
-      let url = 'https://script.google.com/macros/s/AKfycbyKafmiwyLa7jH5g5XnvrrRDssKvPK9eB_mp6VmZj8kEy3dm6tCHEZcTOKe-U2Ky-BJow/exec';
-      fetch(url + '?data=' + encodeURIComponent(JSON.stringify(data)))
+  <h1>Acceso al Fraccionamiento</h1>
+  
+  <div id="qrResult"></div>
+  
+  <script>
+    // Función para obtener parámetros de la URL
+    function getParameterByName(name, url) {
+      if (!url) url = window.location.href;
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+          results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // Función para cargar los datos del QR
+    function loadQRData() {
+      var qrCode = getParameterByName('qrCode');
+      var fecha = getParameterByName('fecha');
+
+      // Realizar la solicitud GET al servicio web de Google Apps Script
+      var url = 'https://script.google.com/macros/s/AKfycbyKafmiwyLa7jH5g5XnvrrRDssKvPK9eB_mp6VmZj8kEy3dm6tCHEZcTOKe-U2Ky-BJow/exec' + qrCode + '&fecha=' + fecha;
+      fetch(url)
         .then(response => response.text())
-        .then(data => alert(data));
-    });
-    Instascan.Camera.getCameras().then(function (cameras) {
-      if (cameras.length > 0) {
-        scanner.start(cameras[0]);
-      } else {
-        console.error('No cameras found.');
-      }
-    }).catch(function (e) {
-      console.error(e);
-    });
+        .then(data => {
+          document.getElementById('qrResult').innerHTML = data;
+        })
+        .catch(error => {
+          console.error('Error al cargar datos del QR:', error);
+          document.getElementById('qrResult').innerHTML = '<p>Error al cargar datos del QR.</p>';
+        });
+    }
+
+    // Cargar datos al cargar la página
+    window.onload = function() {
+      loadQRData();
+    };
   </script>
 </body>
 </html>
