@@ -11,7 +11,7 @@
     let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
     scanner.addListener('scan', function (content) {
       let data = JSON.parse(content);
-      let url = 'https://script.google.com/macros/s/AKfycbzw7PucfJAQfIQAc937wD_Ku1aHJDjAb-yNYAhvIBqZI-cpWX5y8F9bMZWCdbaGoUja2w/exec';
+      let url = 'https://script.google.com/macros/s/AKfycbyKafmiwyLa7jH5g5XnvrrRDssKvPK9eB_mp6VmZj8kEy3dm6tCHEZcTOKe-U2Ky-BJow/exec';
       fetch(url + '?data=' + encodeURIComponent(JSON.stringify(data)))
         .then(response => response.text())
         .then(data => alert(data));
